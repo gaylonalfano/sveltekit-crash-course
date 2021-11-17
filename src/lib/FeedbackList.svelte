@@ -6,5 +6,6 @@
 </script>
 
 {#each feedback as fb (fb.id)}
-	<FeedbackItem item={fb} />
+	<!-- NOTE Can dispatch/emit up to parent by leaving empty -->
+	<FeedbackItem item={fb} on:delete-feedback-item />
 {/each}
