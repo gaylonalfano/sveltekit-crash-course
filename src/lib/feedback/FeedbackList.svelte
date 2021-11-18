@@ -1,5 +1,5 @@
 <script>
-	import FeedbackItem from '$lib/FeedbackItem.svelte';
+	import FeedbackItem from '$lib/feedback/FeedbackItem.svelte';
 	export let feedback;
 
 	console.log(feedback);
