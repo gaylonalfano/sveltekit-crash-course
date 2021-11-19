@@ -1,13 +1,14 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
+	import { FeedbackStore } from '$lib/stores/feedback';
 	import Card from '$lib/components/Card.svelte';
 	export let item;
 
-	const dispatch = createEventDispatcher();
-
-	function handleDelete(id) {
+	function handleDelete(itemId) {
 		// Delete the item
-		dispatch('delete-feedback-item', id);
+		// Q: Why don't I need to use '$'?
+		FeedbackStore.update((currentFeedback) => {
+			return currentFeedback.filter((item) => item.id != itemId);
+		});
 	}
 </script>
 

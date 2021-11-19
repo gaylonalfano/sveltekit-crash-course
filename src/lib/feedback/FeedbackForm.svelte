@@ -1,6 +1,6 @@
 <script>
 	import { v4 as uuidv4 } from 'uuid';
-	import { createEventDispatcher } from 'svelte';
+	import { FeedbackStore } from '$lib/stores/feedback';
 	import Card from '$lib/components/Card.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import RatingSelect from '$lib/feedback/RatingSelect.svelte';
@@ -33,11 +33,6 @@
 		feedbackRating = rating;
 	}
 
-	// Dispatch this up to parent (index.svelte) where feedback data
-	// NOTE Cannot call createEventDispatcher() inside other function!
-	// It must be used at top level
-	const dispatch = createEventDispatcher();
-
 	function handleSubmit() {
 		console.log('handleSubmit triggered');
 		// Verify the text is > 10 chars (can disable via devtools)
@@ -50,8 +45,12 @@
 				rating: +feedbackRating,
 				text: feedbackText
 			};
-			// console.log(newFeedback);
-			dispatch('feedback-submit', newFeedback);
+
+			// Update our Store
+			// Q: Why don't I need to use '$'?
+			FeedbackStore.update((currentFeedback) => {
+				return [newFeedback, ...currentFeedback];
+			});
 
 			// Reset the input
 			feedbackText = '';
