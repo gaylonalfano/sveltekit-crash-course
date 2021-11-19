@@ -39,10 +39,18 @@
 				feedback.length) *
 				100
 		) / 100;
+
+	function addFeedbackItem(e) {
+		// Grab the submitted feedback data from e.detail (dispatched)
+		// console.log('e.detail', e.detail);
+		const newFeedbackItem = e.detail;
+		// Update our feedback Array
+		feedback = [newFeedbackItem, ...feedback];
+	}
 </script>
 
 <div class="container">
-	<FeedbackForm />
+	<FeedbackForm on:feedback-submit={addFeedbackItem} />
 	<FeedbackStats {feedbackCount} {feedbackAverage} />
 	<FeedbackList {feedback} on:delete-feedback-item={deleteFeedbackItem} />
 </div>

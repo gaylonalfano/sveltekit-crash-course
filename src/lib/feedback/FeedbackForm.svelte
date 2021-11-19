@@ -1,4 +1,6 @@
 <script>
+	import { v4 as uuidv4 } from 'uuid';
+	import { createEventDispatcher } from 'svelte';
 	import Card from '$lib/components/Card.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import RatingSelect from '$lib/feedback/RatingSelect.svelte';
@@ -24,14 +26,45 @@
 			btnDisabled = false;
 		}
 	}
+
+	function handleSelect(e) {
+		// NOTE The dispatched event stores the data inside 'e.detail'
+		const rating = e.detail;
+		feedbackRating = rating;
+	}
+
+	// Dispatch this up to parent (index.svelte) where feedback data
+	// NOTE Cannot call createEventDispatcher() inside other function!
+	// It must be used at top level
+	const dispatch = createEventDispatcher();
+
+	function handleSubmit() {
+		console.log('handleSubmit triggered');
+		// Verify the text is > 10 chars (can disable via devtools)
+		if (feedbackText.trim().length >= minChars) {
+			// Add a new feedback to our feedback array
+			// NOTE '+' in front of String converts to number
+			// since form inputs are submitted as strings
+			const newFeedback = {
+				id: uuidv4(),
+				rating: +feedbackRating,
+				text: feedbackText
+			};
+			// console.log(newFeedback);
+			dispatch('feedback-submit', newFeedback);
+
+			// Reset the input
+			feedbackText = '';
+		}
+	}
 </script>
 
 <Card>
 	<header>
 		<h2>How would you rate your service with us?</h2>
 	</header>
-	<RatingSelect />
-	<form>
+	<RatingSelect on:rating-select={handleSelect} />
+	<form on:submit|preventDefault={handleSubmit}>
 		<!-- Rating Select Component -->
 		<div class="input-group">
 			<input

@@ -1,8 +1,12 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	let selected = 10;
+	let dispatch = createEventDispatcher();
 
-	function onChange() {
-		console.log(1);
+	function onChange(e) {
+		console.log(e.currentTarget.value);
+		selected = e.currentTarget.value;
+		dispatch('rating-select', selected);
 	}
 </script>
 
